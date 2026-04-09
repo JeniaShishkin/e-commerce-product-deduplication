@@ -4,19 +4,18 @@ A Python script that automatically removes duplicate products from e-commerce ca
 
 ## 📋 Overview
 
-This tool helps e-commerce businesses maintain clean product catalogs by:
+This tool helps maintaining clean and minimum product prices shown to users by:
 - **Merging duplicate products** with the same SKU (Stock Keeping Unit)
-- **Prioritizing English product names** over Hebrew/other languages
-- **Showing the lowest price** for each unique product
+- **Always showing the lowest price** regardless of product name language
+- **Supporting multi-language catalogs** (English, Hebrew, or any language)
 - **Reducing catalog size** by 60-80% in typical scenarios
 
-Perfect for businesses managing multiple product listings across different suppliers, languages, or platforms.
 
 ## ✨ Features
 
 - ✅ **SKU-based deduplication** - Groups products by unique identifier
-- ✅ **Multi-language support** - Handles English, Hebrew, and mixed catalogs
-- ✅ **Price optimization** - Always shows lowest available price
+- ✅ **Multi-language support** - Handles any language (English, Hebrew, Arabic, etc.)
+- ✅ **Price optimization** - Always shows lowest available price regardless of language
 - ✅ **CSV input/output** - Industry-standard format
 - ✅ **Fast processing** - Handles 10,000+ products in seconds
 - ✅ **Order-independent** - Works with unordered data
@@ -85,8 +84,8 @@ Apple iPhone 15 Pro,A2846,4999.0,APP-IP15P-001
 
 ### Deduplication Rules
 1. **Group by SKU** - All products with same SKU are considered duplicates
-2. **Prefer English names** - If English names exist, use them over Hebrew/other languages
-3. **Lowest price wins** - Among selected names, choose the cheapest
+2. **Lowest price wins** - Always select the cheapest variant regardless of language
+3. **Language-agnostic** - Product name language (English, Hebrew, etc.) doesn't affect selection
 4. **One product per SKU** - Result contains exactly one entry per unique SKU
 
 ## 🎯 How It Works
@@ -95,22 +94,21 @@ Apple iPhone 15 Pro,A2846,4999.0,APP-IP15P-001
 1. **Load all products** from CSV into memory
 2. **Group by SKU** regardless of order in file
 3. **For each SKU group:**
-   - Separate English vs non-English names
-   - If English names exist → select lowest price English product
-   - If no English names → select lowest price overall
+   - Find the product with the lowest price
+   - Select that product (name language doesn't matter)
 4. **Save deduplicated results** to new CSV file
 
 ### Example Processing
 ```
 Input: 5 products with SKU "SAM-S23-001"
 - Samsung Galaxy S23 (English) - ₪2,999
-- סמסונג גלקסי S23 (Hebrew) - ₪3,099
-- Samsung Galaxy S23 256GB (English) - ₪2,850
-- SAMSUNG Galaxy S23 (English) - ₪2,899
-- Samsung Galaxy S23 Black (English) - ₪2,999
+- סמסונג גלקסי S23 (Hebrew) - ₪2,850 ← LOWEST PRICE
+- Samsung Galaxy S23 256GB (English) - ₪2,899
+- SAMSUNG Galaxy S23 (English) - ₪2,999
+- Samsung Galaxy S23 Black (English) - ₪3,099
 
 Output: 1 product
-- Samsung Galaxy S23 256GB (English) - ₪2,850
+- סמסונג גלקסי S23 (Hebrew) - ₪2,850 ✓ Selected for lowest price
 ```
 
 ## 📁 File Structure
@@ -190,9 +188,6 @@ pytest
 python -m flake8 deduplicate_products_v2.py
 ```
 
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 🆘 Troubleshooting
 

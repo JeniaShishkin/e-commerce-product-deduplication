@@ -41,7 +41,7 @@ class ProductDeduplicatorV2:
     def deduplicate_by_sku(self) -> List[Dict]:
         """
         Group by SKU and keep the lowest price for each unique SKU.
-        Prioritizes English product names.
+        Language (English or Hebrew) doesn't matter - always returns the cheapest option.
         Returns deduplicated products.
         """
         sku_groups = defaultdict(list)
@@ -52,25 +52,11 @@ class ProductDeduplicatorV2:
         
         deduplicated = []
         
-        # For each SKU group
+        # For each SKU group, keep the lowest price product (regardless of language)
         for sku, group in sku_groups.items():
-            if len(group) == 1:
-                deduplicated.append(group[0])
-            else:
-                # Separate English and non-English names
-                english_products = [p for p in group if self.is_english_name(p['name'])]
-                non_english_products = [p for p in group if not self.is_english_name(p['name'])]
-                
-                # Strategy: Prefer English names. If English exists, pick lowest English price.
-                # If no English names exist, pick lowest price overall.
-                if english_products:
-                    # Use English product with lowest price
-                    selected = min(english_products, key=lambda x: x['price'])
-                else:
-                    # No English names available, use lowest price available
-                    selected = min(group, key=lambda x: x['price'])
-                
-                deduplicated.append(selected)
+            # Always select the product with the minimum price
+            lowest_price_product = min(group, key=lambda x: x['price'])
+            deduplicated.append(lowest_price_product)
         
         return deduplicated
     
@@ -109,15 +95,6 @@ class ProductDeduplicatorV2:
         
         return grouped
     
-    def is_english_name(self, name: str) -> bool:
-        """Check if name starts with English/ASCII characters (no Hebrew/non-Latin at start)."""
-        # If first character is ASCII (Latin letters/numbers), treat as English name
-        if not name.strip():
-            return False
-        first_char = name.strip()[0]
-        # Check if first character is ASCII letter/digit
-        return ord(first_char) < 128 and (first_char.isalpha() or first_char.isdigit())
-    
     def deduplicate(self) -> List[Dict]:
         """Main deduplication method."""
         # Primary: deduplicate by SKU (most reliable)
@@ -130,31 +107,6 @@ class ProductDeduplicatorV2:
         all_deduplicated = by_sku + by_name
         
         return all_deduplicated
-    
-    def prefer_english_names(self, products: List[Dict]) -> List[Dict]:
-        """For products with same SKU, prefer English names over Hebrew."""
-        sku_groups = defaultdict(list)
-        
-        for product in products:
-            sku_groups[product['sku']].append(product)
-        
-        deduplicated = []
-        
-        for sku, group in sku_groups.items():
-            if len(group) == 1:
-                deduplicated.append(group[0])
-            else:
-                # Find product with English name, preferring lower price
-                english_products = [p for p in group if self.is_english_name(p['name'])]
-                if english_products:
-                    # Use the one with lowest price among English names
-                    best = min(english_products, key=lambda x: x['price'])
-                else:
-                    # No English names, just use lowest price
-                    best = min(group, key=lambda x: x['price'])
-                deduplicated.append(best)
-        
-        return deduplicated
     
     def save_csv(self, filename: str, products: List[Dict]) -> None:
         """Save deduplicated products to CSV."""
