@@ -143,12 +143,6 @@ python deduplicate_products_v2.py
 # Reduction: 79.0%
 ```
 
-### Advanced Analysis
-```bash
-# Run detailed analysis (requires advanced_examples.py)
-python -c "from advanced_examples import AdvancedExamples; AdvancedExamples.example_4_group_statistics()"
-```
-
 ## ⚠️ Data Format Requirements
 
 **Important:** The script only supports CSV files. If your data is in a different format:
@@ -183,14 +177,6 @@ The repository includes comprehensive test data:
 - **Multiple languages** (English + Hebrew)
 - **Various price ranges** and naming variations
 - **Expected output** with 21 deduplicated products
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Add tests for new functionality
-4. Ensure all tests pass
-5. Submit a pull request
 
 ### Development Setup
 ```bash
@@ -227,27 +213,6 @@ MIT License - see [LICENSE](LICENSE) file for details.
 **Script runs but no duplicates found**
 - Solution: Verify SKU column has consistent values
 
-### Getting Help
-
-1. Check the [Issues](https://github.com/yourusername/product-deduplication/issues) page
-2. Review the sample data format
-3. Test with the included `sample_products.csv`
-
-## 🎯 Use Cases
-
-### E-Commerce Scenarios
-- **Multi-supplier catalogs** - Merge products from different vendors
-- **Language variants** - Handle English/Hebrew product listings
-- **Price optimization** - Show lowest prices to customers
-- **Catalog cleanup** - Remove duplicate listings
-- **Platform migration** - Prepare data for new e-commerce platform
-
-### Business Benefits
-- **Improved user experience** - No confusing duplicates
-- **Higher conversion rates** - Customers see competitive prices
-- **Cleaner data** - Easier inventory management
-- **Reduced maintenance** - Less manual duplicate removal
-
 ## 📊 Sample Results
 
 Running on the included test data:
@@ -269,15 +234,3 @@ Reduction:               79.0%
 4. Dell XPS 13 - ₪5,750
 5. Samsung Galaxy S23 256GB - ₪2,850
 ```
-
-## 🔗 Related Projects
-
-- [pandas](https://pandas.pydata.org/) - For advanced data manipulation
-- [openpyxl](https://openpyxl.readthedocs.io/) - Excel file handling
-- [fuzzywuzzy](https://github.com/seatgeek/fuzzywuzzy) - Advanced fuzzy matching
-
----
-
-**Made with ❤️ for e-commerce businesses**
-
-*If you find this tool helpful, please ⭐ star the repository!*
